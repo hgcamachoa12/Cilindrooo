@@ -12,55 +12,62 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import Modelo.Cilindro;
+
 public class MainActivity extends AppCompatActivity {
-    //Declaramos los objetos de ingreso de datos
     EditText etRadio, etAltura;
-    TextView tvVolumen;
+    TextView tvRespuesta;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-      ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-           Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        //Inicilizar los objetos de tipo visuales
-        etRadio =findViewById(R.id.et_radio);
-        etAltura = findViewById(R.id.et_altura);
-        tvVolumen= findViewById(R.id.tvRespuesta);
-        tvVolumen.setText("");
+        //inicializamos los objetos et, tv.
+        etRadio=findViewById(R.id.et_radio);
+        etAltura=findViewById(R.id.et_altura);
+        tvRespuesta=findViewById(R.id.tvRespuesta);
+        tvRespuesta.setText("");
+
 
     }
-
-    public void CalcularVolumen (View boton){
-        if(Validar()) //Si validar retorna true
+    //si validar retorna true, entonces el metodo calcular termina.
+    public void CalcularVolumen(View boton) {
+        if (validar())
             return;
-        //leer los datos en los ediText
-        double radio = Double.valueOf(etRadio.getText().toString());
-        double altura = Double.valueOf(etAltura.getText().toString());
+        //Leer los datos de los editext
+        Double radio = Double.valueOf(etRadio.getText().toString());
+        Double altura = Double.valueOf(etAltura.getText().toString());
         double volumen = Math.PI * Math.pow(radio, 2) * altura;
 
-                tvVolumen.setText(volumen + "");
-
+        Cilindro oC=new Cilindro(radio,altura);
+        tvRespuesta.setText(oC.toString());
     }
 
-    private boolean Validar() {
-        if(etRadio.getText().toString().trim().isEmpty()){
-            etRadio.setError("Campo obligatorio para el radio de la base");
-            etRadio.requestFocus();
-            return  true;
-        }
+    private boolean validar() {
+        //TRIM SUPRIME LOS ESPACIOS EN AMBOS LADOS
+        if (etRadio.getText().toString().trim().isEmpty()) {
 
-        if(etAltura.getText().toString().trim().isEmpty()){
-            etAltura.setError("Campo obligatorio para el volumen del cilindro");
-            etAltura.requestFocus();
-            return  true;
+            etRadio.setError("Campo obligatorio para Radio");
+            etRadio.requestFocus();// el parpadeo estara en el radio
+            return true;
         }
+        if (etAltura.getText().toString().trim().isEmpty()) {
 
+            etAltura.setError("Campo obligatorio para Altura");
+            etAltura.requestFocus();// el parpadeo estara en el radio
+            return true;
+        }
         return false;
+
+
+
     }
 }
